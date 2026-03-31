@@ -1,0 +1,6 @@
+.vscode/
+.idea/
+*.log
+*.tmp
+build_log.txt
+main.exe

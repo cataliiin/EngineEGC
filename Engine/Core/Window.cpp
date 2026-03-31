@@ -1,0 +1,144 @@
+#include "Window.h"
+#include <GL/freeglut.h>
+#include <iostream>
+
+Window *Window::instance = nullptr;
+
+Window::Window(int w, int h, const std::string &t, bool resizable)
+    : width(w), height(h), title(t), windowId(-1), clearColor(0.1f, 0.1f, 0.1f, 1.0f)
+{
+
+    instance = this;
+
+    int dummy_argc = 1;
+    char *dummy_argv[] = {(char *)"executable", NULL};
+    glutInit(&dummy_argc, dummy_argv);
+    
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+    glutInitWindowSize(width, height);
+    glutInitWindowPosition(100, 100);
+
+    windowId = glutCreateWindow(title.c_str());
+
+    if (!resizable)
+    {
+        glutReshapeFunc(NULL);
+    }
+    else
+    {
+        glutReshapeFunc(Window::reshape);
+    }
+
+    glutDisplayFunc(Window::display);
+    glutReshapeFunc(Window::reshape);
+    glutIdleFunc(Window::idle);
+
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
+
+    std::cout << "[WINDOW] Created and initialized automatically." << std::endl;
+}
+
+Window::~Window()
+{
+    if (windowId != -1)
+    {
+        glutDestroyWindow(windowId);
+    }
+}
+
+void Window::run()
+{
+    if (windowId != -1)
+    {
+        glutMainLoop();
+    }
+}
+
+void Window::setBackgroundColor(Color4 color)
+{
+    clearColor = color;
+}
+
+void Window::setTitle(const std::string &newTitle)
+{
+    title = newTitle;
+    if (windowId != -1)
+    {
+        glutSetWindow(windowId);
+        glutSetWindowTitle(title.c_str());
+    }
+}
+
+void Window::setSize(int w, int h)
+{
+    width = w;
+    height = h;
+    if (windowId != -1)
+    {
+        glutSetWindow(windowId);
+        glutReshapeWindow(w, h);
+    }
+}
+
+// CALLBACKS
+
+void Window::display()
+{
+    if (!instance)
+        return;
+
+    glClearColor(
+        instance->clearColor.r,
+        instance->clearColor.g,
+        instance->clearColor.b,
+        instance->clearColor.a);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glLoadIdentity();
+
+
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex2f(-0.5f, -0.5f);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2f(0.5f, -0.5f);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex2f(0.0f, 0.5f);
+    glEnd();
+
+    glutSwapBuffers();
+}
+
+void Window::reshape(int w, int h)
+{
+    if (!instance)
+        return;
+
+    if (!instance->resizable)
+    {
+        if (w != instance->width || h != instance->height)
+        {
+            glutReshapeWindow(instance->width, instance->height);
+            return;
+        }
+    }
+
+    glViewport(0, 0, w, h);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
+
+    glMatrixMode(GL_MODELVIEW);
+}
+
+void Window::idle()
+{
+    if (!instance)
+        return;
+
+    glutPostRedisplay();
+}
