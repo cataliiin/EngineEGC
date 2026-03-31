@@ -3,6 +3,8 @@
 #include <string>
 #include "Types.h"
 
+class Engine;
+
 class Window
 {
 public:
@@ -17,6 +19,7 @@ public:
     void setBackgroundColor(Color4 color);
     void setTitle(const std::string &newTitle);
     void setSize(int w, int h);
+    void setEngine(Engine *e) { engine = e; }
 
     int getWidth() const { return width; }
     int getHeight() const { return height; }
@@ -35,4 +38,7 @@ private:
     Color4 clearColor;
 
     static Window *instance;
+
+    Engine *engine = nullptr;
+    
 };

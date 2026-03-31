@@ -1,6 +1,7 @@
 #include "Window.h"
 #include <GL/freeglut.h>
 #include <iostream>
+#include "../Engine.h"
 
 Window *Window::instance = nullptr;
 
@@ -80,11 +81,12 @@ void Window::setSize(int w, int h)
     }
 }
 
+
 // CALLBACKS
 
 void Window::display()
 {
-    if (!instance)
+    if (!instance || !instance->engine)
         return;
 
     glClearColor(
@@ -93,21 +95,8 @@ void Window::display()
         instance->clearColor.b,
         instance->clearColor.a);
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    instance->engine->render();
 
-    glLoadIdentity();
-
-
-    glBegin(GL_TRIANGLES);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex2f(-0.5f, -0.5f);
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glVertex2f(0.5f, -0.5f);
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glVertex2f(0.0f, 0.5f);
-    glEnd();
-
-    glutSwapBuffers();
 }
 
 void Window::reshape(int w, int h)

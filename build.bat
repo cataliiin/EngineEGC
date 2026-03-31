@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 set "COMPILER=C:\msys64\ucrt64\bin\g++.exe"
-set "INCLUDE=-I C:\msys64\ucrt64\include -I ./Engine -I ./Engine/Core"
+set "INCLUDE=-I C:\msys64\ucrt64\include -I ./Engine -I ./Engine/Core -I ./Engine/Entities"
 set "LIB_PATH=-L C:\msys64\ucrt64\lib"
 set "LIBS=-lfreeglut -lopengl32 -lglu32"
 set "OUT=main.exe"
