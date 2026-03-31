@@ -36,7 +36,6 @@ Window::Window(int w, int h, const std::string &t, bool resizable)
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
-    std::cout << "[WINDOW] Created and initialized automatically." << std::endl;
 }
 
 Window::~Window()
