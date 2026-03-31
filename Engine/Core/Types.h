@@ -21,6 +21,29 @@ struct Vec3
     Vec3 operator*(float s) const { return Vec3(x * s, y * s, z * s); }
 };
 
+struct Transform
+{
+    virtual ~Transform() {}
+};
+
+struct Transform2D : public Transform
+{
+    Vec2 position;
+    float rotation;
+    Vec2 scale;
+
+    Transform2D() : position(0, 0), rotation(0), scale(1, 1) {}
+};
+
+struct Transform3D : public Transform
+{
+    Vec3 position;
+    Vec3 rotation;
+    Vec3 scale;
+
+    Transform3D() : position(0, 0, 0), rotation(0, 0, 0), scale(1, 1, 1) {}
+};
+
 struct Color3
 {
     float r, g, b;
