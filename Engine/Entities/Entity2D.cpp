@@ -11,3 +11,16 @@ void Entity2D::setZIndex(int z)
         engine->sortEntities2DByZIndex();
     }
 }
+
+void Entity2D::setUpdateBehavior(std::function<void(Entity2D *, float)> behavior)
+{
+    this->updateBehavior = behavior;
+}
+
+void Entity2D::Update(float dt)
+{
+    if (updateBehavior)
+    {
+        updateBehavior(this, dt);
+    }
+}

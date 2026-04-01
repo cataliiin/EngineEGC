@@ -12,12 +12,9 @@ public:
     int zIndex = 0;
     Engine *engine = nullptr;
 
-    using UpdateCallback = std::function<void(Entity2D *, float)>;
+    std::function<void(Entity2D *, float)> updateBehavior = nullptr;
 
-    void setUpdate(UpdateCallback callback)
-    {
-        updateCallback = callback;
-    }
+    void setUpdateBehavior(std::function<void(Entity2D *, float)> behavior);
 
     void setZIndex(int z);
 
@@ -26,7 +23,4 @@ public:
 
     virtual void Update(float dt) = 0;
     virtual void Draw() = 0;
-
-protected:
-    UpdateCallback updateCallback = nullptr;
 };

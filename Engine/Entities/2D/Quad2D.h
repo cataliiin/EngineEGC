@@ -12,7 +12,6 @@ public:
 
     virtual ~Quad2D();
 
-    void Update(float deltaTime) override;
     void Draw() override;
 
 private:

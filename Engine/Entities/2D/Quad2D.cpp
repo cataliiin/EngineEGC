@@ -21,15 +21,6 @@ Quad2D::~Quad2D()
 {
 }
 
-void Quad2D::Update(float deltaTime)
-{
-    if (updateCallback != nullptr)
-    {
-        Entity2D::updateCallback(this, deltaTime);
-    }
-
-}
-
 void Quad2D::Draw()
 {
     glPushMatrix();
