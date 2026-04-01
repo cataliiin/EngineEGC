@@ -149,7 +149,7 @@ void Engine::render()
         setupProjection(RenderMode::MODE_3D);
         for (auto e : entities3D)
             if (e)
-                e->Draw();
+                e->Render();
     }
 
     setupProjection(RenderMode::MODE_2D);
@@ -176,7 +176,9 @@ void Engine::update(float deltaTime)
         if (e)
             e->Update(deltaTime);
     }
-    input->update();
+    if (this->input) {
+        this->input->update();
+    }
 }
 
 

@@ -1,5 +1,13 @@
 #pragma once
 
+enum class DrawMode3D {
+    SOLID,
+    WIREFRAME,
+    POINTS,
+    XRAY
+    // TEXTURE
+};
+
 struct Vec2
 {
     float x, y;
