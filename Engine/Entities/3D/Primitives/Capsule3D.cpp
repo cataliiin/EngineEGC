@@ -12,13 +12,15 @@ Capsule3D::Capsule3D() : Entity3D()
 
 void Capsule3D::Draw()
 {
-
     GLUquadric *quad = gluNewQuadric();
+
+    gluQuadricTexture(quad, GL_TRUE);
+    gluQuadricNormals(quad, GLU_SMOOTH);
 
     glPushMatrix();
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
     glTranslatef(0.0f, 0.0f, -height / 2.0f);
-    gluCylinder(quad, radius, radius, height, resolution, 1);
+    gluCylinder(quad, radius, radius, height, resolution, resolution);
     glPopMatrix();
 
     glPushMatrix();
