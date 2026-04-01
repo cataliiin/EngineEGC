@@ -6,7 +6,7 @@
 Window *Window::instance = nullptr;
 
 Window::Window(int w, int h, const std::string &t, bool resizable)
-    : width(w), height(h), title(t), windowId(-1), clearColor(0.1f, 0.1f, 0.1f, 1.0f)
+    : width(w), height(h), title(t), windowId(-1), resizable(resizable), clearColor(0.1f, 0.1f, 0.1f, 1.0f)
 {
 
     instance = this;
@@ -20,15 +20,6 @@ Window::Window(int w, int h, const std::string &t, bool resizable)
     glutInitWindowPosition(100, 100);
 
     windowId = glutCreateWindow(title.c_str());
-
-    if (!resizable)
-    {
-        glutReshapeFunc(NULL);
-    }
-    else
-    {
-        glutReshapeFunc(Window::reshape);
-    }
 
     glutDisplayFunc(Window::display);
     glutReshapeFunc(Window::reshape);
@@ -112,6 +103,9 @@ void Window::reshape(int w, int h)
             return;
         }
     }
+
+    instance->width = w;
+    instance->height = h;
 
     glViewport(0, 0, w, h);
 
