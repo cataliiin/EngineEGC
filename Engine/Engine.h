@@ -1,9 +1,11 @@
 #pragma once
 #include "Core/Window.h"
-#include "Entity2D.h"
-#include "Entity3D.h"
 #include <vector>
 #include <chrono>
+#include "Core/Input.h"
+
+class Entity2D;
+class Entity3D;
 
 enum class RenderMode
 {
@@ -21,8 +23,11 @@ public:
 
     void run();
 
-    void addEntity2D(Entity2D* e) { if(e) entities2D.push_back(e); }
-    void addEntity3D(Entity3D* e) { if(e) entities3D.push_back(e); }
+    Input *getInput() { return input; }
+
+    void addEntity2D(Entity2D* e);
+    void addEntity3D(Entity3D* e);
+    void sortEntities2DByZIndex();
 
     void update(float deltaTime);
     void render();
@@ -45,6 +50,7 @@ private:
     int msPerFrame = 16;
     std::chrono::steady_clock::time_point lastFrameTime;
     bool firstFrame = true;
+    Input *input;
 
     std::vector<Entity2D *> entities2D;
     std::vector<Entity3D *> entities3D;
