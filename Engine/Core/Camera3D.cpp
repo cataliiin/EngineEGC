@@ -35,11 +35,11 @@ void Camera3D::Update(float dt)
 
 void Camera3D::updateDirectionVectors()
 {
-    float yaw = transform.rotation.y;
-    float pitch = transform.rotation.x;
+    float radYaw = transform.rotation.y * 3.14159f / 180.0f;
+    float radPitch = transform.rotation.x * 3.14159f / 180.0f;
 
-    forward.x = cos(yaw) * cos(pitch);
-    forward.y = sin(pitch);
-    forward.z = sin(yaw) * cos(pitch);
+    forward.x = sin(radYaw) * cos(radPitch);
+    forward.y = sin(radPitch);
+    forward.z = -cos(radYaw) * cos(radPitch);
     forward.normalize();
 }
