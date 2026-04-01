@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Core/Entity3D.h"
+#include "../Entity3D.h"
 #include <functional>
 
 class Cylinder3D : public Entity3D

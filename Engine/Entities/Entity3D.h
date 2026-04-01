@@ -1,5 +1,5 @@
 #pragma once
-#include "Types.h"
+#include <Types.h>
 #include "GL/freeglut.h"
 
 class Entity3D

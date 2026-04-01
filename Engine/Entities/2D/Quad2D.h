@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Engine/Core/Entity2D.h"
+#include "../Entity2D.h"
 #include "GL/freeglut.h"
 
 class Quad2D : public Entity2D
