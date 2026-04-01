@@ -3,6 +3,9 @@
 #include <vector>
 #include <chrono>
 #include "Core/Input.h"
+#include "Core/Camera.h"
+#include "Core/Camera2D.h"
+#include "Core/Camera3D.h"
 
 class Entity2D;
 class Entity3D;
@@ -38,6 +41,25 @@ public:
         msPerFrame = 1000 / targetFPS;
     }
 
+    void addCamera(Camera *cam, bool setAsActive = false)
+    {
+        cameras.push_back(cam);
+        if (setAsActive || activeCamera == nullptr)
+        {
+            activeCamera = cam;
+        }
+    }
+
+    void setActiveCamera(int index)
+    {
+        if (index >= 0 && index < cameras.size())
+        {
+            activeCamera = cameras[index];
+        }
+    }
+
+    Camera *getActiveCamera() { return activeCamera; }
+
     int getMsPerFrame() const { return msPerFrame; }
     float calculateDeltaTime();
 
@@ -51,9 +73,13 @@ private:
     std::chrono::steady_clock::time_point lastFrameTime;
     bool firstFrame = true;
     Input *input;
+    std::vector<Camera *> cameras;
+    Camera *activeCamera = nullptr;
 
     std::vector<Entity2D *> entities2D;
     std::vector<Entity3D *> entities3D;
 
-    void setupProjection(RenderMode mode);
+    //void setupProjection(RenderMode mode);
+
+
 };

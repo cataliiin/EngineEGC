@@ -1,6 +1,6 @@
 #include "Engine.h"
-#include "Core/Entity2D.h"
-#include "Core/Entity3D.h"
+#include "Entities/Entity2D.h"
+#include "Entities/Entity3D.h"
 #include <GL/freeglut.h>
 #include <algorithm>
 #include <cstdint>
@@ -96,6 +96,7 @@ void Engine::run()
     }
 }
 
+/*
 void Engine::setupProjection(RenderMode mode)
 {
     glMatrixMode(GL_PROJECTION);
@@ -115,6 +116,7 @@ void Engine::setupProjection(RenderMode mode)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
+*/
 
 void Engine::addEntity2D(Entity2D *e)
 {
@@ -144,24 +146,48 @@ void Engine::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (this->renderMode == RenderMode::MODE_3D)
+    if (activeCamera)
     {
-        setupProjection(RenderMode::MODE_3D);
+        activeCamera->Apply(window->getWidth(), window->getHeight());
+
         for (auto e : entities3D)
             if (e)
                 e->Render();
     }
 
-    setupProjection(RenderMode::MODE_2D);
+    glDisable(GL_DEPTH_TEST);
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0, window->getWidth(), 0, window->getHeight());
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
     for (auto e : entities2D)
         if (e)
             e->Draw();
+
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+
+    glEnable(GL_DEPTH_TEST);
 
     glutSwapBuffers();
 }
 
 void Engine::update(float deltaTime)
 {
+
+    if (activeCamera)
+    {
+        activeCamera->Update(deltaTime);
+    }
+
     if (renderMode == RenderMode::MODE_3D)
     {
         for (auto e : entities3D)
@@ -176,7 +202,9 @@ void Engine::update(float deltaTime)
         if (e)
             e->Update(deltaTime);
     }
-    if (this->input) {
+
+    if (this->input)
+    {
         this->input->update();
     }
 }
