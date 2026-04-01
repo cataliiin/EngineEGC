@@ -9,14 +9,6 @@ Sphere3D::Sphere3D() : Entity3D()
     transform.scale = Vec3(1.0f, 1.0f, 1.0f);
 }
 
-void Sphere3D::Update(float dt)
-{
-    if (updateBehavior)
-    {
-        updateBehavior(this, dt);
-    }
-}
-
 void Sphere3D::Draw()
 {
     glutSolidSphere(1.0f, 20, 20);

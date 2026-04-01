@@ -8,12 +8,6 @@ Cube3D::Cube3D() : Entity3D() {
     transform.scale = Vec3(1.0f, 1.0f, 1.0f);
 }
 
-void Cube3D::Update(float dt) {
-    if (updateBehavior) {
-        updateBehavior(this, dt);
-    }
-}
-
 void Cube3D::Draw() {
     glutSolidCube(1.0); 
 }

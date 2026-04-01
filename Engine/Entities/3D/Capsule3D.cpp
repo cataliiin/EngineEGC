@@ -10,14 +10,6 @@ Capsule3D::Capsule3D() : Entity3D()
     transform.scale = Vec3(1.0f, 1.0f, 1.0f);
 }
 
-void Capsule3D::Update(float dt)
-{
-    if (updateBehavior)
-    {
-        updateBehavior(this, dt);
-    }
-}
-
 void Capsule3D::Draw()
 {
 

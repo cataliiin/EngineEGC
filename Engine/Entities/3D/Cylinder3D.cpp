@@ -10,14 +10,6 @@ Cylinder3D::Cylinder3D() : Entity3D()
     transform.scale = Vec3(1.0f, 1.0f, 1.0f);
 }
 
-void Cylinder3D::Update(float dt)
-{
-    if (updateBehavior)
-    {
-        updateBehavior(this, dt);
-    }
-}
-
 void Cylinder3D::Draw()
 {
     glPushMatrix();

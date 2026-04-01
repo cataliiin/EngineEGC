@@ -9,14 +9,6 @@ Plane3D::Plane3D() : Entity3D()
     transform.scale = Vec3(1.0f, 1.0f, 1.0f);
 }
 
-void Plane3D::Update(float dt)
-{
-    if (updateBehavior)
-    {
-        updateBehavior(this, dt);
-    }
-}
-
 void Plane3D::Draw()
 {
     float halfSize = size / 2.0f;
