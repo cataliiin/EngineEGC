@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 
 enum class DrawMode3D {
     SOLID,
@@ -25,8 +26,47 @@ struct Vec3
 
     Vec3(float x = 0.0f, float y = 0.0f, float z = 0.0f) : x(x), y(y), z(z) {}
 
-    Vec3 operator+(const Vec3 &v) const { return Vec3(x + v.x, y + v.y, z + v.z); }
-    Vec3 operator*(float s) const { return Vec3(x * s, y * s, z * s); }
+    Vec3 operator+(const Vec3 &v) const { return {x + v.x, y + v.y, z + v.z}; }
+
+    Vec3 operator-(const Vec3 &v) const { return {x - v.x, y - v.y, z - v.z}; }
+
+    Vec3 operator*(float s) const { return {x * s, y * s, z * s}; }
+
+    Vec3 &operator+=(const Vec3 &v)
+    {
+        x += v.x;
+        y += v.y;
+        z += v.z;
+        return *this;
+    }
+
+    Vec3 &operator-=(const Vec3 &v)
+    {
+        x -= v.x;
+        y -= v.y;
+        z -= v.z;
+        return *this;
+    }
+
+    Vec3 cross(const Vec3 &other) const
+    {
+        return Vec3(
+            y * other.z - z * other.y,
+            z * other.x - x * other.z,
+            x * other.y - y * other.x);
+    }
+
+    void normalize()
+    {
+        float lengthSq = x * x + y * y + z * z;
+        if (lengthSq > 0.00001f)
+        {
+            float length = sqrt(lengthSq);
+            x /= length;
+            y /= length;
+            z /= length;
+        }
+    }
 };
 
 struct Transform
