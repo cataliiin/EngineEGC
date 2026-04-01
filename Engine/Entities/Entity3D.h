@@ -2,6 +2,8 @@
 #include <Types.h>
 #include "GL/freeglut.h"
 #include <functional>
+#include "Material.h"
+
 class Entity3D
 {
 public:
@@ -9,12 +11,13 @@ public:
     Entity3D *parent = nullptr;
     std::vector<Entity3D *> children;
 
-    Color4 color;
+    Material material;
+    
     DrawMode3D drawMode;
 
     std::function<void(Entity3D*, float)> updateBehavior = nullptr;
 
-    Entity3D() : color(1, 1, 1, 1), drawMode(DrawMode3D::SOLID) {}
+    Entity3D() : drawMode(DrawMode3D::SOLID) {}
     virtual ~Entity3D() {}
 
     virtual void Update(float dt);

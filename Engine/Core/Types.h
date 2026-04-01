@@ -6,7 +6,6 @@ enum class DrawMode3D {
     WIREFRAME,
     POINTS,
     XRAY
-    // TEXTURE
 };
 
 struct Vec2

@@ -41,39 +41,44 @@ void Entity3D::Render()
     glRotatef(transform.rotation.z, 0, 0, 1);
     glScalef(transform.scale.x, transform.scale.y, transform.scale.z);
 
-    if (drawMode == DrawMode3D::XRAY)
+    material.Apply();
+
+    switch (drawMode)
     {
+    case DrawMode3D::WIREFRAME:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glDisable(GL_TEXTURE_2D);
+        Draw();
+        break;
+
+    case DrawMode3D::POINTS:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+        glPointSize(5.0f);
+        glDisable(GL_TEXTURE_2D);
+        Draw();
+        break;
+
+    case DrawMode3D::XRAY:
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glColor4f(color.r, color.g, color.b, 0.3f);
+        glColor4f(material.diffuse.r, material.diffuse.g, material.diffuse.b, 0.3f);
         Draw();
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glLineWidth(2.0f);
-        glColor4f(color.r, color.g, color.b, 1.0f);
+        glColor4f(material.diffuse.r, material.diffuse.g, material.diffuse.b, 1.0f);
         Draw();
 
         glDisable(GL_BLEND);
-    }
-    else
-    {
-        switch (drawMode)
-        {
-        case DrawMode3D::WIREFRAME:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            break;
-        case DrawMode3D::POINTS:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-            glPointSize(5.0f);
-            break;
-        default:
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            break;
-        }
-        glColor4f(color.r, color.g, color.b, color.a);
+        break;
+
+    case DrawMode3D::SOLID:
+    default:
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         Draw();
+        break;
     }
 
     for (Entity3D *child : children)
