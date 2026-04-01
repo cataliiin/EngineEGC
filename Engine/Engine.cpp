@@ -122,9 +122,12 @@ void Engine::addEntity2D(Entity2D *e)
 {
     if (e)
     {
-        e->engine = this;
         entities2D.push_back(e);
         sortEntities2DByZIndex();
+        if (e->updateBehavior != nullptr)
+        {
+            updatableEntities2D.push_back(e);
+        }
     }
 }
 
@@ -133,6 +136,34 @@ void Engine::addEntity3D(Entity3D *e)
     if (e)
     {
         entities3D.push_back(e);
+        if (e->updateBehavior != nullptr)
+        {
+            updatableEntities3D.push_back(e);
+        }
+    }
+}
+
+void Engine::registerUpdateableEntity2D(Entity2D *e)
+{
+    if (e)
+    {
+        auto it = std::find(updatableEntities2D.begin(), updatableEntities2D.end(), e);
+        if (it == updatableEntities2D.end())
+        {
+            updatableEntities2D.push_back(e);
+        }
+    }
+}
+
+void Engine::registerUpdateableEntity3D(Entity3D* e)
+{
+    if (e)
+    {
+        auto it = std::find(updatableEntities3D.begin(), updatableEntities3D.end(), e);
+        if (it == updatableEntities3D.end())
+        {
+            updatableEntities3D.push_back(e);
+        }
     }
 }
 
@@ -141,6 +172,7 @@ void Engine::sortEntities2DByZIndex()
     std::stable_sort(entities2D.begin(), entities2D.end(), [](Entity2D *a, Entity2D *b)
                      { return a->zIndex < b->zIndex; });
 }
+
 
 void Engine::render()
 {
@@ -190,17 +222,15 @@ void Engine::update(float deltaTime)
 
     if (renderMode == RenderMode::MODE_3D)
     {
-        for (auto e : entities3D)
+        for (auto e : updatableEntities3D)
         {
-            if (e)
-                e->Update(deltaTime);
+            e->Update(deltaTime);
         }
     }
 
-    for (auto e : entities2D)
+    for (auto e : updatableEntities2D)
     {
-        if (e)
-            e->Update(deltaTime);
+        e->Update(deltaTime);
     }
 
     if (this->input)
@@ -208,7 +238,6 @@ void Engine::update(float deltaTime)
         this->input->update();
     }
 }
-
 
 Engine::~Engine()
 {

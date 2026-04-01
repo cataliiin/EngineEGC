@@ -62,6 +62,8 @@ public:
 
     int getMsPerFrame() const { return msPerFrame; }
     float calculateDeltaTime();
+    void registerUpdateableEntity3D(Entity3D* e);
+    void registerUpdateableEntity2D(Entity2D* e);
 
     Window *getWindow() { return window; }
 private:
@@ -77,7 +79,9 @@ private:
     Camera *activeCamera = nullptr;
 
     std::vector<Entity2D *> entities2D;
+    std::vector<Entity2D *> updatableEntities2D;
     std::vector<Entity3D *> entities3D;
+    std::vector<Entity3D *> updatableEntities3D;
 
     //void setupProjection(RenderMode mode);
 
