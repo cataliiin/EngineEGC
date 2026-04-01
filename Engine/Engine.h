@@ -6,6 +6,7 @@
 #include "Core/Camera.h"
 #include "Core/Camera2D.h"
 #include "Core/Camera3D.h"
+#include "Core/LightManager.h"
 
 class Entity2D;
 class Entity3D;
@@ -65,6 +66,9 @@ public:
     void registerUpdateableEntity3D(Entity3D* e);
     void registerUpdateableEntity2D(Entity2D* e);
 
+    void addLight(Light3D *light) { lightManager.addLight(light); }
+    LightManager &getLightManager() { return lightManager; }
+
     Window *getWindow() { return window; }
 private:
     Window *window;
@@ -77,6 +81,7 @@ private:
     Input *input;
     std::vector<Camera *> cameras;
     Camera *activeCamera = nullptr;
+    LightManager lightManager;
 
     std::vector<Entity2D *> entities2D;
     std::vector<Entity2D *> updatableEntities2D;

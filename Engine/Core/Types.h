@@ -55,7 +55,7 @@ struct Vec3
             x * other.y - y * other.x);
     }
 
-    void normalize()
+    Vec3 &normalize()
     {
         float lengthSq = x * x + y * y + z * z;
         if (lengthSq > 0.00001f)
@@ -65,6 +65,17 @@ struct Vec3
             y /= length;
             z /= length;
         }
+        return *this;
+    }
+
+    float length() const
+    {
+        return std::sqrt(x * x + y * y + z * z);
+    }
+
+    float lengthSquared() const
+    {
+        return x * x + y * y + z * z;
     }
 };
 

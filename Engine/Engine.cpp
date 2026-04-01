@@ -67,6 +67,12 @@ void Engine::init(int width, int height, const std::string &title, bool resizabl
     glutKeyboardUpFunc(onKeyUp);
     glutSpecialFunc(onSpecialKeyDown);
     glutSpecialUpFunc(onSpecialKeyUp);
+
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_COLOR_MATERIAL);
+
     running = true;
 
 }
@@ -182,6 +188,16 @@ void Engine::render()
     {
         activeCamera->Apply(window->getWidth(), window->getHeight());
 
+        Camera3D *cam3d = dynamic_cast<Camera3D *>(activeCamera);
+        if (cam3d)
+        {
+            lightManager.UpdateLights(cam3d->transform.position);
+        }
+        else
+        {
+            lightManager.UpdateLights(Vec3(0, 0, 0));
+        }
+
         for (auto e : entities3D)
         {
             if (e->parent == nullptr)
@@ -192,7 +208,7 @@ void Engine::render()
     }
 
     glDisable(GL_DEPTH_TEST);
-
+    
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();

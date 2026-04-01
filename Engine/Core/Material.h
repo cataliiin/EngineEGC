@@ -16,6 +16,8 @@ public:
     unsigned int textureID;
     bool hasTexture;
 
+    Vec2 tiling = {1.0f, 1.0f};
+
     Material() : ambient(0.2f, 0.2f, 0.2f, 1.0f),
                  diffuse(1.0f, 1.0f, 1.0f, 1.0f),
                  specular(0.5f, 0.5f, 0.5f, 1.0f),
@@ -64,10 +66,19 @@ public:
         {
             glEnable(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, textureID);
+
+            glMatrixMode(GL_TEXTURE);
+            glLoadIdentity();
+            glScalef(tiling.x, tiling.y, 1.0f);
+            glMatrixMode(GL_MODELVIEW);
         }
         else
         {
             glDisable(GL_TEXTURE_2D);
+
+            glMatrixMode(GL_TEXTURE);
+            glLoadIdentity();
+            glMatrixMode(GL_MODELVIEW);
         }
     }
 };
