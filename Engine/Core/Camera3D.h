@@ -18,13 +18,7 @@ public:
     void Apply(int width, int height) override;
     void Update(float dt) override;
 
-    void setUpdateBehavior(std::function<void(Camera *, float)> behavior)
-    {
-        this->updateBehavior = behavior;
-    }
-
 private:
     void updateDirectionVectors();
-    std::function<void(Camera *, float)> updateBehavior;
 
 };
