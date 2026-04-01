@@ -16,6 +16,21 @@ void Entity3D::Update(float dt)
     }
 }
 
+void Entity3D::addChild(Entity3D *child)
+{
+    if (!child || child == this)
+        return;
+    
+    if (child->parent)
+    {
+        auto &pChildren = child->parent->children;
+        pChildren.erase(std::remove(pChildren.begin(), pChildren.end(), child), pChildren.end());
+    }
+
+    child->parent = this;
+    this->children.push_back(child);
+}
+
 void Entity3D::Render()
 {
     glPushMatrix();
@@ -59,6 +74,12 @@ void Entity3D::Render()
         }
         glColor4f(color.r, color.g, color.b, color.a);
         Draw();
+    }
+
+    for (Entity3D *child : children)
+    {
+        if (child)
+            child->Render();
     }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

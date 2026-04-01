@@ -183,8 +183,12 @@ void Engine::render()
         activeCamera->Apply(window->getWidth(), window->getHeight());
 
         for (auto e : entities3D)
-            if (e)
+        {
+            if (e->parent == nullptr)
+            {
                 e->Render();
+            }
+        }
     }
 
     glDisable(GL_DEPTH_TEST);

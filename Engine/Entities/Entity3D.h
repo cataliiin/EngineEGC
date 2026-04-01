@@ -6,6 +6,9 @@ class Entity3D
 {
 public:
     Transform3D transform;
+    Entity3D *parent = nullptr;
+    std::vector<Entity3D *> children;
+
     Color4 color;
     DrawMode3D drawMode;
 
@@ -16,8 +19,8 @@ public:
 
     virtual void Update(float dt);
     void setUpdateBehavior(std::function<void(Entity3D *, float)> behavior);
+    void addChild(Entity3D *child);
 
-    void Render();
-    virtual void Draw() = 0;
-
-};
+        void Render();
+        virtual void Draw() = 0;
+    };
