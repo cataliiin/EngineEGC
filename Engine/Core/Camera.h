@@ -9,8 +9,9 @@ public:
 
     std::function<void(Camera *, float)> updateBehavior;
 
-    virtual void Apply(int screenWidth, int screenHeight) = 0;
+    virtual bool is3D() const { return false; }
 
+    virtual void Apply(int screenWidth, int screenHeight) = 0;
     virtual void Update(float dt){
         if (updateBehavior)
         {

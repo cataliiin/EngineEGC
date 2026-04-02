@@ -13,10 +13,12 @@ public:
     float farClip = 1000.0f;
 
     Vec3 forward;
+    Vec3 right;
     Vec3 up = {0, 1, 0};
 
     void Apply(int width, int height) override;
     void Update(float dt) override;
+    bool is3D() const override { return true; }
 
 private:
     void updateDirectionVectors();
