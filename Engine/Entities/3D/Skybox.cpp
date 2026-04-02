@@ -54,81 +54,74 @@ void Skybox::Load(const std::vector<std::string> &faces)
 }
 void Skybox::Draw(Vec3 cameraRotation)
 {
-    if (!isLoaded)
-        return;
+    if (!isLoaded) return;
 
     glDisable(GL_LIGHTING);
     glDepthMask(GL_FALSE);
-    glColor3f(1, 1, 1);
-    glMatrixMode(GL_MODELVIEW);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+    glMatrixMode(GL_TEXTURE);
     glPushMatrix();
     glLoadIdentity();
-    glRotatef(cameraRotation.x, 1, 0, 0);
-    glRotatef(cameraRotation.y, 0, 1, 0);
-    glRotatef(cameraRotation.z, 0, 0, 1);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    float matrix[16];
+    glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
+
+    matrix[12] = 0.0f;
+    matrix[13] = 0.0f;
+    matrix[14] = 0.0f;
+    glLoadMatrixf(matrix);
 
     glEnable(GL_TEXTURE_CUBE_MAP);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
     float s = 1.0f;
     glBegin(GL_QUADS);
-    glTexCoord3f(-s, -s, s);
-    glVertex3f(-s, -s, s);
-    glTexCoord3f(s, -s, s);
-    glVertex3f(s, -s, s);
-    glTexCoord3f(s, s, s);
-    glVertex3f(s, s, s);
-    glTexCoord3f(-s, s, s);
-    glVertex3f(-s, s, s);
 
-    glTexCoord3f(s, -s, -s);
-    glVertex3f(s, -s, -s);
-    glTexCoord3f(-s, -s, -s);
-    glVertex3f(-s, -s, -s);
-    glTexCoord3f(-s, s, -s);
-    glVertex3f(-s, s, -s);
-    glTexCoord3f(s, s, -s);
-    glVertex3f(s, s, -s);
+    glTexCoord3f(-s, -s,  s); glVertex3f(-s, -s,  s);
+    glTexCoord3f( s, -s,  s); glVertex3f( s, -s,  s);
+    glTexCoord3f( s,  s,  s); glVertex3f( s,  s,  s);
+    glTexCoord3f(-s,  s,  s); glVertex3f(-s,  s,  s);
 
-    glTexCoord3f(s, -s, s);
-    glVertex3f(s, -s, s);
-    glTexCoord3f(s, -s, -s);
-    glVertex3f(s, -s, -s);
-    glTexCoord3f(s, s, -s);
-    glVertex3f(s, s, -s);
-    glTexCoord3f(s, s, s);
-    glVertex3f(s, s, s);
+    glTexCoord3f( s, -s, -s); glVertex3f( s, -s, -s);
+    glTexCoord3f(-s, -s, -s); glVertex3f(-s, -s, -s);
+    glTexCoord3f(-s,  s, -s); glVertex3f(-s,  s, -s);
+    glTexCoord3f( s,  s, -s); glVertex3f( s,  s, -s);
 
-    glTexCoord3f(-s, -s, -s);
-    glVertex3f(-s, -s, -s);
-    glTexCoord3f(-s, -s, s);
-    glVertex3f(-s, -s, s);
-    glTexCoord3f(-s, s, s);
-    glVertex3f(-s, s, s);
-    glTexCoord3f(-s, s, -s);
-    glVertex3f(-s, s, -s);
+    glTexCoord3f( s, -s,  s); glVertex3f( s, -s,  s);
+    glTexCoord3f( s, -s, -s); glVertex3f( s, -s, -s);
+    glTexCoord3f( s,  s, -s); glVertex3f( s,  s, -s);
+    glTexCoord3f( s,  s,  s); glVertex3f( s,  s,  s);
 
-    glTexCoord3f(-s, s, s);
-    glVertex3f(-s, s, s);
-    glTexCoord3f(s, s, s);
-    glVertex3f(s, s, s);
-    glTexCoord3f(s, s, -s);
-    glVertex3f(s, s, -s);
-    glTexCoord3f(-s, s, -s);
-    glVertex3f(-s, s, -s);
+    glTexCoord3f(-s, -s, -s); glVertex3f(-s, -s, -s);
+    glTexCoord3f(-s, -s,  s); glVertex3f(-s, -s,  s);
+    glTexCoord3f(-s,  s,  s); glVertex3f(-s,  s,  s);
+    glTexCoord3f(-s,  s, -s); glVertex3f(-s,  s, -s);
 
-    glTexCoord3f(-s, -s, -s);
-    glVertex3f(-s, -s, -s);
-    glTexCoord3f(s, -s, -s);
-    glVertex3f(s, -s, -s);
-    glTexCoord3f(s, -s, s);
-    glVertex3f(s, -s, s);
-    glTexCoord3f(-s, -s, s);
-    glVertex3f(-s, -s, s);
+    glTexCoord3f(-s,  s,  s); glVertex3f(-s,  s,  s);
+    glTexCoord3f( s,  s,  s); glVertex3f( s,  s,  s);
+    glTexCoord3f( s,  s, -s); glVertex3f( s,  s, -s);
+    glTexCoord3f(-s,  s, -s); glVertex3f(-s,  s, -s);
+
+    glTexCoord3f(-s, -s, -s); glVertex3f(-s, -s, -s);
+    glTexCoord3f( s, -s, -s); glVertex3f( s, -s, -s);
+    glTexCoord3f( s, -s,  s); glVertex3f( s, -s,  s);
+    glTexCoord3f(-s, -s,  s); glVertex3f(-s, -s,  s);
+
     glEnd();
 
     glDisable(GL_TEXTURE_CUBE_MAP);
+
     glPopMatrix();
+    
+    glMatrixMode(GL_TEXTURE);
+    glPopMatrix();
+    
+    glMatrixMode(GL_MODELVIEW);
+
     glDepthMask(GL_TRUE);
     glEnable(GL_LIGHTING);
 }
