@@ -34,7 +34,6 @@ void Entity3D::addChild(Entity3D *child)
 void Entity3D::Render()
 {
     glPushMatrix();
-
     glTranslatef(transform.position.x, transform.position.y, transform.position.z);
     glRotatef(transform.rotation.x, 1, 0, 0);
     glRotatef(transform.rotation.y, 0, 1, 0);
@@ -46,21 +45,24 @@ void Entity3D::Render()
     switch (drawMode)
     {
     case DrawMode3D::WIREFRAME:
+        glDisable(GL_LIGHTING);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDisable(GL_TEXTURE_2D);
         Draw();
+        glEnable(GL_LIGHTING);
         break;
 
     case DrawMode3D::POINTS:
+        glDisable(GL_LIGHTING);
         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
         glPointSize(5.0f);
-        glDisable(GL_TEXTURE_2D);
         Draw();
+        glEnable(GL_LIGHTING);
         break;
 
     case DrawMode3D::XRAY:
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_LIGHTING);
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glColor4f(material.diffuse.r, material.diffuse.g, material.diffuse.b, 0.3f);
@@ -72,10 +74,12 @@ void Entity3D::Render()
         Draw();
 
         glDisable(GL_BLEND);
+        glEnable(GL_LIGHTING);
         break;
 
     case DrawMode3D::SOLID:
     default:
+        glEnable(GL_LIGHTING);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         Draw();
         break;
@@ -88,5 +92,6 @@ void Entity3D::Render()
     }
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }

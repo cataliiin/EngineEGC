@@ -17,7 +17,7 @@ public:
     void Update(float dt);
     void Render();
 
-    Scene* GetActiveScene() {
+    Scene* getActiveScene() {
         return sceneStack.empty() ? nullptr : sceneStack.back();
     }
 };

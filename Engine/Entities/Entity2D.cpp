@@ -6,9 +6,9 @@ void Entity2D::setZIndex(int z)
     if (z == zIndex)
         return;
     zIndex = z;
-    if (Engine::getInstance().getSceneManager().GetActiveScene())
+    if (Engine::getInstance().getSceneManager().getActiveScene())
     {
-        Engine::getInstance().getSceneManager().GetActiveScene()->sortEntities2DByZIndex();
+        Engine::getInstance().getSceneManager().getActiveScene()->sortEntities2DByZIndex();
     }
 }
 

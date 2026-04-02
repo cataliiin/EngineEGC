@@ -6,6 +6,10 @@
 #include <cstdint>
 #include <iostream>
 
+#ifndef GL_MULTISAMPLE
+#define GL_MULTISAMPLE 0x809D
+#endif
+
 Engine::Engine() : window(nullptr), running(false) {}
 
 void timerCallback(int value)
@@ -61,6 +65,17 @@ void Engine::init(int width, int height, const std::string &title, bool resizabl
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_COLOR_MATERIAL);
+
+    glEnable(GL_MULTISAMPLE);
+    glEnable(GL_NORMALIZE);
+    
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 
     running = true;
 

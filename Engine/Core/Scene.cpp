@@ -29,45 +29,56 @@ void Scene::Update(float dt)
 
 void Scene::Render()
 {
-    if (activeCamera)
-    {
-        Window* win = Engine::getInstance().getWindow();
-        activeCamera->Apply(win->getWidth(), win->getHeight());
+    if (!activeCamera)
+        return;
 
-        if (activeCamera->is3D())
+    Window *win = Engine::getInstance().getWindow();
+    int w = win->getWidth();
+    int h = win->getHeight();
+
+    activeCamera->Apply(w, h); 
+
+    if (activeCamera->is3D())
+    {
+        Camera3D *cam3d = static_cast<Camera3D *>(activeCamera);
+
+        if (activeSkybox)
         {
-            Camera3D *cam3d = static_cast<Camera3D *>(activeCamera);
-            if (activeSkybox)
-            {
-                activeSkybox->Draw(cam3d->transform.rotation);
-            }
-            lightManager.UpdateLights(cam3d->transform.position);
+            activeSkybox->Draw(cam3d->transform.rotation);
         }
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_DEPTH_TEST);
+        lightManager.UpdateLights(cam3d->transform.position);
 
         for (auto e : entities3D)
         {
-            if (e->parent == nullptr)
+            if (e && e->parent == nullptr)
             {
                 e->Render();
             }
         }
     }
 
+    glDisable(GL_LIGHTING);
     glDisable(GL_DEPTH_TEST);
-    
+
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    Window* win = Engine::getInstance().getWindow();
-    gluOrtho2D(0, win->getWidth(), 0, win->getHeight());
+    gluOrtho2D(0, w, 0, h);
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     for (auto e : entities2D)
+    {
         if (e)
             e->Draw();
+    }
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();

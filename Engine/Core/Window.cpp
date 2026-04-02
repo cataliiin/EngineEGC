@@ -15,7 +15,7 @@ Window::Window(int w, int h, const std::string &t, bool resizable)
     char *dummy_argv[] = {(char *)"executable", NULL};
     glutInit(&dummy_argc, dummy_argv);
     
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE);
     glutInitWindowSize(width, height);
     glutInitWindowPosition(100, 100);
 
