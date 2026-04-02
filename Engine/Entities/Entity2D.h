@@ -2,15 +2,12 @@
 #include "Types.h"
 #include <functional>
 
-class Engine;
-
 class Entity2D
 {
 public:
     Transform2D transform;
     Color4 color;
     int zIndex = 0;
-    Engine *engine = nullptr;
 
     std::function<void(Entity2D *, float)> updateBehavior = nullptr;
 

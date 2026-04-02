@@ -6,57 +6,46 @@
 #include <cstdint>
 #include <iostream>
 
-static Engine *engineInstance = nullptr;
-
 Engine::Engine() : window(nullptr), running(false) {}
 
 void timerCallback(int value)
 {
-    if (engineInstance)
-    {
-        float dt = engineInstance->calculateDeltaTime();
-
-        engineInstance->update(dt);
-
-        glutPostRedisplay();
-
-        glutTimerFunc(engineInstance->getMsPerFrame(), timerCallback, 0);
-    }
+    float dt = Engine::getInstance().calculateDeltaTime();
+    Engine::getInstance().update(dt);
+    glutPostRedisplay();
+    glutTimerFunc(Engine::getInstance().getMsPerFrame(), timerCallback, 0);
 }
 
 void onKeyDown(unsigned char key, int x, int y)
 {
-    if (engineInstance)
-        engineInstance->getInput()->setKeyState(key, true);
+    Engine::getInstance().getInput()->setKeyState(key, true);
 }
 
 void onKeyUp(unsigned char key, int x, int y)
 {
-    if (engineInstance)
-        engineInstance->getInput()->setKeyState(key, false);
+    Engine::getInstance().getInput()->setKeyState(key, false);
 }
 
 void onSpecialKeyDown(int key, int x, int y)
 {
-    if (engineInstance && engineInstance->getInput())
+    if (Engine::getInstance().getInput())
     {
-        engineInstance->getInput()->setSpecialKeyState(key, true);
-        engineInstance->getInput()->updateModifiers(glutGetModifiers());
+        Engine::getInstance().getInput()->setSpecialKeyState(key, true);
+        Engine::getInstance().getInput()->updateModifiers(glutGetModifiers());
     }
 }
 
 void onSpecialKeyUp(int key, int x, int y)
 {
-    if (engineInstance && engineInstance->getInput())
+    if (Engine::getInstance().getInput())
     {
-        engineInstance->getInput()->setSpecialKeyState(key, false);
-        engineInstance->getInput()->updateModifiers(glutGetModifiers());
+        Engine::getInstance().getInput()->setSpecialKeyState(key, false);
+        Engine::getInstance().getInput()->updateModifiers(glutGetModifiers());
     }
 }
 
 void Engine::init(int width, int height, const std::string &title, bool resizable, Color4 bgColor, RenderMode mode)
 {
-    engineInstance = this;
 
     window = new Window(width, height, title, resizable);
     window->setBackgroundColor(bgColor);
@@ -102,156 +91,18 @@ void Engine::run()
     }
 }
 
-/*
-void Engine::setupProjection(RenderMode mode)
-{
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    if (mode == RenderMode::MODE_2D)
-    {
-        gluOrtho2D(0, window->getWidth(), 0, window->getHeight());
-        glDisable(GL_DEPTH_TEST);
-    }
-    else
-    {
-        gluPerspective(45.0f, (float)window->getWidth() / window->getHeight(), 0.1f, 1000.0f);
-        glEnable(GL_DEPTH_TEST);
-    }
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
-*/
-
-void Engine::addEntity2D(Entity2D *e)
-{
-    if (e)
-    {
-        entities2D.push_back(e);
-        sortEntities2DByZIndex();
-        if (e->updateBehavior != nullptr)
-        {
-            updatableEntities2D.push_back(e);
-        }
-    }
-}
-
-void Engine::addEntity3D(Entity3D *e)
-{
-    if (e)
-    {
-        entities3D.push_back(e);
-        if (e->updateBehavior != nullptr)
-        {
-            updatableEntities3D.push_back(e);
-        }
-    }
-}
-
-void Engine::registerUpdateableEntity2D(Entity2D *e)
-{
-    if (e)
-    {
-        auto it = std::find(updatableEntities2D.begin(), updatableEntities2D.end(), e);
-        if (it == updatableEntities2D.end())
-        {
-            updatableEntities2D.push_back(e);
-        }
-    }
-}
-
-void Engine::registerUpdateableEntity3D(Entity3D* e)
-{
-    if (e)
-    {
-        auto it = std::find(updatableEntities3D.begin(), updatableEntities3D.end(), e);
-        if (it == updatableEntities3D.end())
-        {
-            updatableEntities3D.push_back(e);
-        }
-    }
-}
-
-void Engine::sortEntities2DByZIndex()
-{
-    std::stable_sort(entities2D.begin(), entities2D.end(), [](Entity2D *a, Entity2D *b)
-                     { return a->zIndex < b->zIndex; });
-}
-
-
 void Engine::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (activeCamera)
-    {
-        activeCamera->Apply(window->getWidth(), window->getHeight());
-
-        Camera3D *cam3d = dynamic_cast<Camera3D *>(activeCamera);
-        if (cam3d)
-        {
-            lightManager.UpdateLights(cam3d->transform.position);
-        }
-        else
-        {
-            lightManager.UpdateLights(Vec3(0, 0, 0));
-        }
-
-        for (auto e : entities3D)
-        {
-            if (e->parent == nullptr)
-            {
-                e->Render();
-            }
-        }
-    }
-
-    glDisable(GL_DEPTH_TEST);
-    
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0, window->getWidth(), 0, window->getHeight());
-
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
-
-    for (auto e : entities2D)
-        if (e)
-            e->Draw();
-
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
-
-    glEnable(GL_DEPTH_TEST);
+    sceneManager.Render();
 
     glutSwapBuffers();
 }
 
 void Engine::update(float deltaTime)
 {
-
-    if (activeCamera)
-    {
-        activeCamera->Update(deltaTime);
-    }
-
-    if (renderMode == RenderMode::MODE_3D)
-    {
-        for (auto e : updatableEntities3D)
-        {
-            e->Update(deltaTime);
-        }
-    }
-
-    for (auto e : updatableEntities2D)
-    {
-        e->Update(deltaTime);
-    }
+    sceneManager.Update(deltaTime);
 
     if (this->input)
     {
@@ -261,16 +112,6 @@ void Engine::update(float deltaTime)
 
 Engine::~Engine()
 {
-    for (auto e : entities2D)
-        delete e;
-    for (auto e : entities3D)
-        delete e;
-
-    entities2D.clear();
-    entities3D.clear();
-
-    if (window != nullptr)
-        delete window;
-
-    engineInstance = nullptr;
+    delete input;
+    delete window;
 }
